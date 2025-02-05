@@ -96,7 +96,8 @@ namespace SpartaDungeon.Scenes
                 Console.Write($"(+{DataManager.Instance.inventory.armor.itemData.defence}) \n");
             }
             //
-            Console.Write($"체 력 : {DataManager.Instance.player.playerData.hp} \n");
+            Console.Write($"체 력 : {DataManager.Instance.player.playerData.hp} / {DataManager.Instance.player.playerData.maxHp} \n");
+            Console.Write($"exp : {DataManager.Instance.player.playerData.exp} / 다음레벨까지 남은 경험치: {10 * DataManager.Instance.player.playerData.level - DataManager.Instance.player.playerData.exp} \n");
             Console.Write($"Gold : {DataManager.Instance.player.playerData.gold} G\n\n");
             Console.Write($"0. 나가기 \n\n");
             Console.Write($"원하시는 행동을 입력해주세요. \n>>");
