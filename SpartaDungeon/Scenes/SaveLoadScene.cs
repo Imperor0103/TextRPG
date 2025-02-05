@@ -1,4 +1,5 @@
-﻿using SpartaDungeon.Managers;
+﻿using Newtonsoft.Json;
+using SpartaDungeon.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,7 +40,10 @@ namespace SpartaDungeon.Scenes
             Console.WriteLine("[저장 / 불러오기] \n현재까지의 데이터를 저장하거나, 이전의 데이터를 불러올 수 있습니다.\n");
             // 저장슬롯 보여준다
             Console.WriteLine("[저장 슬롯]\n");
-            // 상점의 아이템 보여주기
+
+            /// json이 저장되는 폴더를 검색하여, 저장파일이 있는지 검사한다 
+            CheckSlot();
+
             for (int i = 0; i < dataSlots.Length; i++)
             {
                 Console.Write($"- {i + 1} ");
@@ -47,13 +51,31 @@ namespace SpartaDungeon.Scenes
                 {
                     // 해당 슬롯에 이미 저장 데이터가 있다면 저장 데이터를 표시
                     // 플레이어의 이름, 레벨, 무기, 갑옷, 돈 이정도만 표시하자
+                    Console.Write($"이름:{dataSlots[i].player.playerData.name} | " + $"레벨:{dataSlots[i].player.playerData.level} | ");
+                    if (dataSlots[i].inventory.weapon != null)
+                    {
+                        Console.Write($"무기:{dataSlots[i].inventory.weapon.itemData.name} | ");
+                    }
+                    else
+                    {
+                        Console.Write($"무기:없음 | ");
+                    }
+                    //
+                    if (dataSlots[i].inventory.armor != null)
+                    {
+                        Console.Write($"갑옷:{dataSlots[i].inventory.armor.itemData.name} | ");
+                    }
+                    else
+                    {
+                        Console.Write($"갑옷:없음 | ");
+                    }
+                    Console.Write($"Gold :{dataSlots[i].player.playerData.gold} G \n");
                 }
                 else
                 {
                     // 없으면 비워놓는다
-                    Console.WriteLine();
+                    Console.WriteLine("비어있는 저장슬롯");
                 }
-                Console.WriteLine();
             }
             Console.WriteLine();
             Console.WriteLine("1~5 중에서 슬롯을 선택하여 저장, 불러오기, 삭제 가능\n0.이전화면으로 돌아가기\n"); // \n4.게임 저장\n5.게임 불러오기\n6.종료
@@ -65,9 +87,46 @@ namespace SpartaDungeon.Scenes
             {
                 if (num >= 1 && num <= dataSlots.Length)
                 {
-
+                    // 슬롯이 비어있었던 경우
+                    if (dataSlots[num - 1] == null)
+                    {
+                        /// 이전 씬의 데이터를 가져와서 저장한다
+                        BaseScene prevScene = SceneManager.Instance.GetPrevScene(); // 사실 없어도 된다. DataManager가 씬과 상관없이 존재하기 때문이다
+                        if (prevScene != null)
+                        {
+                            /// 여기가 문제다
+                            /// GameData를 멤버로 가진 클래스가 없다. 심지어 DataManager도 GameData를 멤버로 가지고 있지 않다
+                            /// 그래서 new로 생성한다.
+                            GameData data = new GameData(num - 1, DataManager.Instance.player, DataManager.Instance.inventory); // 실제 배열의 인덱스는 num-1이다
+                            /// 하지만 플레이어, 인벤토리가 없는데도 data가 null이 되지 않아서 조건을 바꿨다
+                            //if (data != null)
+                            if (data.player != null || data.inventory != null)
+                            {
+                                // 저장
+                                dataSlots[num - 1] = data;
+                                DataManager.Instance.SaveData(num); /// 파일의 인덱스는 1부터
+                                Console.WriteLine($"슬롯 {num}번에 데이터를 저장했습니다.계속하려면 enter.");
+                                Console.ReadLine();
+                            }
+                            else
+                            {
+                                Console.WriteLine("저장할 데이터가 없습니다.계속하려면 enter.");
+                                Console.ReadLine();
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("이전 씬이 존재하지 않습니다.계속하려면 enter.");
+                            Console.ReadLine();
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"슬롯{num}에는 이미 저장된 데이터가 존재합니다.");
+                        ModifySlot(dataSlots[num - 1]);
+                    }
                 }
-                else if(num == 0)
+                else if (num == 0)
                 {
                     // TownScene에서 왔으면 TownScene으로, GameProcess에서 왔으면 GameProcess로 돌아가야하므로 이전 씬의 이름을 가져온다
                     SceneManager.Instance.SetCurrentScene(SceneManager.Instance.GetPrevScene().GetName());
@@ -86,10 +145,86 @@ namespace SpartaDungeon.Scenes
         }
         public void CheckSlot()
         {
+            // json이 저장되어있는 폴더를 검색하여, 해당 저장파일이 존재하면, 파일이름을 슬롯에 넣어야한다
+            for (int i = 0; i < dataSlots.Length; i++)
+            {
+                int slotNumber = i + 1; // 파일 이름에 사용한 번호
+                string filePath = DataManager.Instance.GetFilePath(slotNumber); // "savefile_1.json" 등
+                if (File.Exists(filePath))
+                {
+                    try
+                    {
+                        // 파일에서 JSON 데이터를 읽어들임
+                        string jsonData = File.ReadAllText(filePath);
+                        // 역직렬화를 위한 설정
+                        var settings = new JsonSerializerSettings()
+                        {
+                            NullValueHandling = NullValueHandling.Include,
+                            MissingMemberHandling = MissingMemberHandling.Ignore
+                        };
+                        // JSON 데이터를 GameData 객체로 변환
+                        GameData loadedData = JsonConvert.DeserializeObject<GameData>(jsonData, settings);
+                        dataSlots[i] = loadedData;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"슬롯{slotNumber} 데이터를 불러오는 중 오류 발생: {e.Message}");
+                        dataSlots[i] = null;
+                    }
+                }
+                else
+                {
+                    // 파일이 없으면 해당 슬롯은 비어있는 상태
+                    dataSlots[i] = null;
+                }
+            }
+        }
+        public void ModifySlot(GameData data)
+        {
+            // 매개변수로 들어오는 data는 이미 슬롯에 있던 기존의 데이터
             bool isValid = false;
             int num;
             while (!isValid)
             {
+                Console.Clear();
+                Console.WriteLine("[저장 / 불러오기] \n현재까지의 데이터를 저장하거나, 이전의 데이터를 불러올 수 있습니다.\n");
+                // 저장슬롯 보여준다
+                Console.WriteLine("[저장 슬롯]\n");
+                for (int i = 0; i < dataSlots.Length; i++)
+                {
+                    Console.Write($"- {i + 1} ");
+                    if (dataSlots[i] != null)
+                    {
+                        // 해당 슬롯에 이미 저장 데이터가 있다면 저장 데이터를 표시
+                        // 플레이어의 이름, 레벨, 무기, 갑옷, 돈 이정도만 표시하자
+                        Console.Write($"이름:{dataSlots[i].player.playerData.name} | " + $"레벨:{dataSlots[i].player.playerData.level} | ");
+                        if (dataSlots[i].inventory.weapon != null)
+                        {
+                            Console.Write($"무기:{dataSlots[i].inventory.weapon.itemData.name} | ");
+                        }
+                        else
+                        {
+                            Console.Write($"무기:없음 | ");
+                        }
+                        //
+                        if (dataSlots[i].inventory.armor != null)
+                        {
+                            Console.Write($"갑옷:{dataSlots[i].inventory.armor.itemData.name} | ");
+                        }
+                        else
+                        {
+                            Console.Write($"갑옷:없음 | ");
+                        }
+                        Console.Write($"Gold :{dataSlots[i].player.playerData.gold} G \n");
+                    }
+                    else
+                    {
+                        // 없으면 비워놓는다
+                        Console.WriteLine("비어있는 저장슬롯");
+                    }
+                }
+                Console.WriteLine();
+                Console.Write("1.불러오기\n2.저장 데이터 덮어쓰기\n3.저장 데이터 삭제\n0.이전화면으로 돌아가기\n"); // \n4.게임 저장\n5.게임 불러오기\n6.종료
                 Console.Write("원하시는 행동을 입력해주세요.\n>> ");
                 string input = Console.ReadLine();
                 if (int.TryParse(input, out num))
@@ -97,11 +232,19 @@ namespace SpartaDungeon.Scenes
                     switch (num)
                     {
                         case 1:
+                            // 불러오기
                             break;
                         case 2:
+                            OverwriteData(data);    // 기존의 데이터 전달
+                            //isValid = true;
+                            break;
+                        case 3:
+                            DeleteData(data);   // 삭제할 데이터 전달
+                            //isValid = true;
                             break;
                         case 0:
                             /// TownScene에서 왔으면 TownScene으로, GameProcess에서 왔으면 GameProcess로 돌아가야하므로 이전 씬의 이름을 가져온다
+                            isValid = true;
                             SceneManager.Instance.SetCurrentScene(SceneManager.Instance.GetPrevScene().GetName());
                             break;
                         default:
@@ -116,6 +259,46 @@ namespace SpartaDungeon.Scenes
                     Console.ReadLine();
                 }
             }
+        }
+        // 덮어쓰기
+        public void OverwriteData(GameData data)
+        {
+            // 새 데이터를 생성 (슬롯 번호는 data.index가 0-based로 저장되어 있으므로, 파일 저장 시에는 +1 해줌)
+            GameData newData = new GameData(data.index, DataManager.Instance.player, DataManager.Instance.inventory);
+            // 파일 저장 : DataManager의 SaveData 메서드는 파일 번호(1-based)를 받으므로 data.index + 1을 전달
+            /// 하지만 플레이어, 인벤토리가 없는데도 data가 null이 되지 않아서 조건을 바꿨다
+            if (newData.player != null || newData.inventory != null)
+            {
+                DataManager.Instance.SaveData(data.index + 1);
+                // 슬롯 배열 업데이트
+                // (예: dataSlots[data.index] = newData;)
+                // 여기서는 ModifySlot의 매개변수 data를 갱신해도 되고, dataSlots 배열의 해당 인덱스를 직접 갱신해도 됨
+                // 만약 dataSlots 배열이 현재 클래스의 멤버라면 아래처럼 작성
+                dataSlots[data.index] = newData;
+                Console.WriteLine($"슬롯 {data.index + 1}번에 새로운 데이터를 저장했습니다. 계속하려면 Enter를 누르세요.");
+                Console.ReadLine();
+            }
+            else
+            {
+                Console.WriteLine("저장할 데이터가 없습니다.계속하려면 enter.");
+                Console.ReadLine();
+            }
+
+        }
+        // 삭제
+        public void DeleteData(GameData data)
+        {
+            // 매개변수로 들어가는 데이터는 삭제할 데이터
+            // 저장된 파일(삭제할 데이터)의 경로를 구함 (data.index가 0부터 시작하므로 파일 번호는 data.index + 1)
+            string filePath = DataManager.Instance.GetFilePath(data.index + 1);
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+            // 슬롯 배열에서도 데이터를 제거
+            dataSlots[data.index] = null;
+            Console.WriteLine($"슬롯 {data.index + 1}번의 데이터가 삭제되었습니다. 계속하려면 Enter를 누르세요.");
+            Console.ReadLine();
         }
     }
 }

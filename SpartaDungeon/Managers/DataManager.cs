@@ -10,7 +10,7 @@ namespace SpartaDungeon.Managers
     // player와 inventory를 하나의 파일로 저장하기 위해 GameData 클래스로 래핑한다
     public class GameData
     {
-        public int index;
+        public int index;   // 저장시점에 저장슬롯의 인덱스를 대입한다
         public Player player;
         public Inventory inventory;
         public GameData() { }
