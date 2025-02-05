@@ -62,16 +62,18 @@ namespace SpartaDungeon
                             break;
                         case 9:
                             isValid = true;
-                            Console.WriteLine("게임을 종료합니다");
+                            //Console.WriteLine("게임을 종료합니다");
                             break;
                         default:
-                            Console.WriteLine("잘못된 입력입니다");
+                            Console.WriteLine("잘못된 입력입니다.계속하려면 enter.");
+                            Console.ReadLine();
                             break;
                     }
                 }
                 else
                 {
-                    Console.WriteLine("잘못된 입력입니다");
+                    Console.WriteLine("잘못된 입력입니다.계속하려면 enter.");
+                    Console.ReadLine();
                 }
             }
         }

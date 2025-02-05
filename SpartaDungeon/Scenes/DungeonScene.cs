@@ -120,21 +120,50 @@ namespace SpartaDungeon.Scenes
             // hp가 0보다 크다
             else
             {
-                // 방어력으로 던전 클리어시
-                // 1.권장 방어력보다 낮다면 60% 확률로 성공
-                // 보상 없고 체력 감소량이 절반
-                // 경험치
-
-                // 2.권장 방어력보다 높다면 성공
-                // 권장 방어력 +- 에 따라 종료시 체력 소모 반영
-                // 기본 체력 감소량: 20~35 랜덤
-                // 내 방어력 - 권장 방어력 만큼 랜덤 값에 추가 또는 감소 설정
-                // 경험치
-
-                // 공격력으로 던전 클리어시 
+                /// 공격력으로 던전 클리어시(이건... 랜덤을 따로 주는게 좋겠다. 공격력이 높을수록, 공격력으로 클리어할 가능성이 높아지게 만들자)
                 // 각 던전 기본보상 + 공격력%~ 공격력*2 % 사이의 추가 보상
                 // 경험치
 
+
+
+                float damage = Math.Max(rand.Next(0, 4), rand.Next(20, 36) + dungeonInfo.defence - DataManager.Instance.player.playerData.defence);
+                /// 방어력으로 던전 클리어시
+                if (DataManager.Instance.player.playerData.defence < dungeonInfo.defence)
+                {
+                    // 1.권장 방어력보다 낮다면 60% 확률로 성공
+
+                    // 보상 없고 체력 절반 감소
+                    DataManager.Instance.player.playerData.hp /= 2; // 만약 체력이 1이면 0으로 만들어, 다음 던전 진입시 무조건 실패하게 만든다
+                    // 경험치
+                    DataManager.Instance.player.playerData.exp += dungeonInfo.exp;
+                    CheckLevelUp();
+                }
+                else
+                {
+                    // 2.권장 방어력보다 높다면 성공
+                    // 권장 방어력 +- 에 따라 종료시 체력 소모 반영
+                    // 기본 체력 감소량: 20~35 랜덤
+                    // 내 방어력 - 권장 방어력 만큼 랜덤 값에 추가 또는 감소 설정
+                    // 경험치
+                    DataManager.Instance.player.playerData.exp += dungeonInfo.exp;
+                    CheckLevelUp();
+                }
+
+
+            }
+        }
+        public void CheckLevelUp()
+        {
+            bool isLevelUp = DataManager.Instance.player.playerData.exp >= 10 * DataManager.Instance.player.playerData.level;
+            while (isLevelUp)
+            {
+                // 다음 레벨까지 필요한 경험치 공식: 10 * 플레이어의 현재레벨
+                int remainExp = DataManager.Instance.player.playerData.exp - 10 * DataManager.Instance.player.playerData.level;
+                // 레벨업
+                DataManager.Instance.player.playerData.level += 1;
+                DataManager.Instance.player.playerData.exp = remainExp;
+                Console.WriteLine($"축하합니다. 레벨이 {DataManager.Instance.player.playerData.level}가 되었습니다");
+                isLevelUp = DataManager.Instance.player.playerData.exp >= 10 * DataManager.Instance.player.playerData.level ? true : false;
             }
         }
     }

@@ -27,6 +27,9 @@ namespace SpartaDungeon
         public float maxHp;    // 최대 체력
         public float hp;       // 체력
         public int gold;       // 소지금
+        //public int expToNextLevel;  // 다음 레벨까지 필요한 경험치는 직접 만들지 말고, level을 이용하여 공식으로 처리한다
+        // 다음 레벨까지 필요한 경험치 = level * 10
+        public int exp;        // 경험치
     }
 
     public class Player
@@ -36,7 +39,7 @@ namespace SpartaDungeon
         {
         }
         // 플레이어 생성
-        public void SetPlayerData(int lv, eClassType type, float atk, float def, float maxH, float h, int gold)
+        public void SetPlayerData(int lv, eClassType type, float atk, float def, float maxH, float h, int gold, int e = 0)
         {
             playerData.level = lv;
             playerData.charaClass = type;
@@ -45,6 +48,7 @@ namespace SpartaDungeon
             playerData.maxHp = maxH;
             playerData.hp = h;
             playerData.gold = gold;
+            playerData.exp = e;     // e는 입력하지 않는 경우 기본값 0으로 세팅
             //
         }
         public void SetPlayerName(string name)
