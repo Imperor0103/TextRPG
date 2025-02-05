@@ -19,6 +19,7 @@ namespace SpartaDungeon.Scenes
         {
             return sceneName;
         }
+        public abstract void Start();
         public abstract void LoadScene();   // 추상클래스에서는 virtual을 사용 불가
         public abstract void UnloadScene();
         public abstract void Update();

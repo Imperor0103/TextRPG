@@ -13,6 +13,10 @@ namespace SpartaDungeon.Scenes
         public StoreScene(string name) : base(name)
         {
         }
+        public override void Start()
+        {
+        }
+
         public override void LoadScene()
         {
         }

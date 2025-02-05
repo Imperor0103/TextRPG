@@ -13,6 +13,9 @@ namespace SpartaDungeon.Scenes
         public TownScene(string name) : base(name)
         {
         }
+        public override void Start()
+        {
+        }
 
         public override void LoadScene()
         {
@@ -29,7 +32,7 @@ namespace SpartaDungeon.Scenes
         {
             Console.Clear();
             Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다. \n이 곳에서 던전으로 들어가기전 활동을 할 수 있습니다.\n");
-            Console.WriteLine("1.상태 보기\n2.인벤토리\n3.상점\n4.던전입장\n5.휴식하기\n"); // \n4.게임 저장\n5.게임 불러오기\n6.종료
+            Console.WriteLine("1.상태 보기\n2.인벤토리\n3.상점\n4.던전입장\n5.휴식하기\n6.저장하기\n"); // \n4.게임 저장\n5.게임 불러오기\n6.종료
             Console.Write("원하시는 행동을 입력해주세요.\n>> ");
             int num;
             string input = Console.ReadLine();
@@ -52,6 +55,9 @@ namespace SpartaDungeon.Scenes
                         break;
                     case 5:
                         Rest();
+                        break;
+                    case 6:
+                        SceneManager.Instance.SetCurrentScene("saveLoad");
                         break;
                     default:
                         Console.WriteLine("잘못된 입력입니다.계속하려면 enter.");
@@ -88,6 +94,7 @@ namespace SpartaDungeon.Scenes
             {
                 Console.Write($"(+{DataManager.Instance.inventory.weapon.itemData.attack}) \n");
             }
+            Console.Write("\n");
             //
             Console.Write($"방어력 : {DataManager.Instance.player.playerData.defence} ");
             /// 아이템 방어력 추가
@@ -95,6 +102,7 @@ namespace SpartaDungeon.Scenes
             {
                 Console.Write($"(+{DataManager.Instance.inventory.armor.itemData.defence}) \n");
             }
+            Console.Write("\n");
             //
             Console.Write($"체 력 : {DataManager.Instance.player.playerData.hp} / {DataManager.Instance.player.playerData.maxHp} \n");
             Console.Write($"exp : {DataManager.Instance.player.playerData.exp} / 다음레벨까지 남은 경험치: {10 * DataManager.Instance.player.playerData.level - DataManager.Instance.player.playerData.exp} \n");

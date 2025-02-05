@@ -7,7 +7,7 @@ namespace SpartaDungeon
         static void Main(string[] args)
         {
             GameProcess gameProcess = new GameProcess();
-            gameProcess.StartGame();
+            gameProcess.Start();
             gameProcess.Loop();
         }
     }
