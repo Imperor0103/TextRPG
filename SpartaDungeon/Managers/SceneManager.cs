@@ -15,6 +15,10 @@ namespace SpartaDungeon.Managers
         BaseScene currentScene;
         //List<BaseScene> sceneList;
         public Dictionary<string, BaseScene> sceneDictionary;
+
+        // scene의 이름을 List<string>에 저장해서 유니티의 BuildIndex처럼 사용할 수 있겠다
+        // 따로 선언하지 않고 GetCurrentSceneIndex로 Dictionary에서 인덱스를 가져올 수 있게 만들었다
+
         public void PrepareScene()
         {
             if (sceneDictionary == null)
@@ -32,7 +36,8 @@ namespace SpartaDungeon.Managers
             sceneDictionary.Add("store",storeScene);
             sceneDictionary.Add("dungeon",dungeonScene);
             sceneDictionary.Add("saveLoad", saveLoadScene);
-            
+            // 위의 순서대로 빌드인덱스를 정해서 List<string>에 저장해보자
+
             //sceneList.Add(townScene);
             //sceneList.Add(storeScene);
             //sceneList.Add(dungeonScene);
@@ -67,5 +72,25 @@ namespace SpartaDungeon.Managers
         {
             return prevScene;
         }
+
+        // 유니티의 BuildIndex 가져오는 기능
+        public int GetCurrentSceneIndex()
+        {
+            int index = 0;
+            foreach (var pair in sceneDictionary)
+            {
+                if (pair.Value == currentScene)
+                {
+                    return index;
+                }
+                index++;
+            }
+            return -1;  // 못 찾으면 -1 리턴
+        }
+        public int GetCurrentSceneindex2()
+        {
+            return sceneDictionary.Keys.ToList().IndexOf(currentScene.GetName()); 
+        }
+
     }
 }
