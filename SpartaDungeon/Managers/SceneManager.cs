@@ -36,7 +36,6 @@ namespace SpartaDungeon.Managers
             sceneDictionary.Add("store",storeScene);
             sceneDictionary.Add("dungeon",dungeonScene);
             sceneDictionary.Add("saveLoad", saveLoadScene);
-            // 위의 순서대로 빌드인덱스를 정해서 List<string>에 저장해보자
 
             //sceneList.Add(townScene);
             //sceneList.Add(storeScene);
@@ -46,6 +45,7 @@ namespace SpartaDungeon.Managers
         }
         public void Start()
         {
+            // 현재 이자리에 Awake가 없어서 Start를 썼지만, 원래 Awake 호출한다
             currentScene.Start();
         }
         public void Update()
