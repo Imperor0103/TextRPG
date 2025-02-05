@@ -226,7 +226,7 @@ namespace SpartaDungeon.Scenes
                     }
                 }
                 Console.WriteLine();
-                Console.WriteLine("1.불러오기\n2.저장 데이터 덮어쓰기\n3.저장 데이터 삭제\n0.이전화면으로 돌아가기\n"); // \n4.게임 저장\n5.게임 불러오기\n6.종료
+                Console.WriteLine("1.슬롯에 저장된 데이터 불러오기\n2.슬롯에 새로운 데이터 덮어쓰기\n3.슬롯에 저장된 데이터 삭제\n0.이전화면으로 돌아가기\n"); // \n4.게임 저장\n5.게임 불러오기\n6.종료
                 Console.WriteLine("원하시는 행동을 입력해주세요.\n>> ");
                 string input = Console.ReadLine();
                 if (int.TryParse(input, out num))
