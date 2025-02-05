@@ -95,7 +95,7 @@ namespace SpartaDungeon
                     {
                         case 1:
                             isValid = true;
-                            DataManager.Instance.player.SetPlayerData(1, eClassType.WARRIOR, 10.0f, 5.0f, 100.0f, 100.0f, 15000);
+                            DataManager.Instance.player.SetPlayerData(1, eClassType.WARRIOR, 10.0f, 5.0f, 100.0f, 0.0f, 15000);
                             Console.WriteLine("전사");
                             break;
                         case 2:
@@ -109,13 +109,15 @@ namespace SpartaDungeon
                             Console.WriteLine("궁수");
                             break;
                         default:
-                            Console.WriteLine("잘못된 입력입니다");
+                            Console.WriteLine("잘못된 입력입니다.계속하려면 enter.");
+                            Console.ReadLine();
                             break;
                     }
                 }
                 else
                 {
-                    Console.WriteLine("잘못된 입력입니다");
+                    Console.WriteLine("잘못된 입력입니다.계속하려면 enter.");
+                    Console.ReadLine();
                 }
             }
             isValid = false;
@@ -123,6 +125,7 @@ namespace SpartaDungeon
             while (!isValid)
             {
                 // 이름을 정해야겠지
+                // 나중에 이름에 숫자 못들어가게 수정할 수 있으면 수정하자
                 string name = Console.ReadLine();
                 if (name != null)
                 {
@@ -131,13 +134,16 @@ namespace SpartaDungeon
                 }
                 else
                 {
-                    Console.WriteLine("다시 입력하십시오");
+                    Console.WriteLine("다시 입력하십시오.계속하려면 enter.");
+                    Console.ReadLine();
                 }
             }
         }
         public void LoadCharacter()
         {
-            Console.WriteLine("[불러오기] 는 준비중");
+            Console.WriteLine("[불러오기] 는 준비중입니다.계속하려면 enter.");
+            Console.ReadLine();
+
             // json 파일 읽기
             return;
         }

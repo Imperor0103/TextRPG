@@ -65,43 +65,41 @@ namespace SpartaDungeon.Scenes
         }
         public void SelectDungeon()
         {
-            bool isValid = false;
             int num;
-            while (!isValid)
-            {
-                Console.Clear();
-                Console.Write("[던전 입장]\n이곳에서 던전으로 들어가기전 활동을 할 수 있습니다.\n\n");
-                Console.WriteLine("1.쉬운 던전 | 방어력 5 이상 권장\n" +
-                    "2.일반 던전 | 방어력 11 이상 권장\n" +
-                    "3.어려운 던전 | 방어력 17 이상 권장\n" + "0.나가기\n");
-                Console.Write($"원하시는 행동을 입력해주세요. \n>>");
+            Console.Clear();
+            Console.Write("[던전 입장]\n이곳에서 던전으로 들어가기전 활동을 할 수 있습니다.\n\n");
+            Console.WriteLine("1.쉬운 던전 | 방어력 5 이상 권장\n" +
+                "2.일반 던전 | 방어력 11 이상 권장\n" +
+                "3.어려운 던전 | 방어력 17 이상 권장\n" + "0.나가기\n");
+            Console.Write($"원하시는 행동을 입력해주세요. \n>>");
 
-                string input = Console.ReadLine();
-                if (int.TryParse(input, out num))
+            string input = Console.ReadLine();
+            if (int.TryParse(input, out num))
+            {
+                switch (num)
                 {
-                    switch (num)
-                    {
-                        case 1: // 쉬운 던전
-                            EnterDungeon(dungeonList[0]);
-                            break;
-                        case 2: // 일반 던전
-                            EnterDungeon(dungeonList[1]);
-                            break;
-                        case 3: // 어려운 던전
-                            EnterDungeon(dungeonList[2]);
-                            break;
-                        case 0:
-                            isValid = true;
-                            break;
-                        default:
-                            Console.WriteLine("잘못된 입력입니다");
-                            break;
-                    }
+                    case 1: // 쉬운 던전
+                        EnterDungeon(dungeonList[0]);
+                        break;
+                    case 2: // 일반 던전
+                        EnterDungeon(dungeonList[1]);
+                        break;
+                    case 3: // 어려운 던전
+                        EnterDungeon(dungeonList[2]);
+                        break;
+                    case 0:
+                        // 씬을 교체해야한다
+                        SceneManager.Instance.SetCurrentScene("town");
+
+                        break;
+                    default:
+                        Console.WriteLine("잘못된 입력입니다");
+                        break;
                 }
-                else
-                {
-                    Console.WriteLine("잘못된 입력입니다");
-                }
+            }
+            else
+            {
+                Console.WriteLine("잘못된 입력입니다");
             }
         }
         public void EnterDungeon(DungeonInfo dungeonInfo)
@@ -115,6 +113,7 @@ namespace SpartaDungeon.Scenes
                 // 실패
                 Console.WriteLine("실패. 다시 던전 입구로 돌아갑니다. 계속하려면 Enter");
                 // 체력 1로 만들고 던전입구로
+                DataManager.Instance.player.playerData.hp = 1;
                 Console.ReadLine();
                 return;
             }

@@ -50,13 +50,15 @@ namespace SpartaDungeon.Scenes
                         SceneManager.Instance.SetCurrentScene("town");
                         break;
                     default:
-                        Console.WriteLine("잘못된 입력입니다");
+                        Console.WriteLine("잘못된 입력입니다.계속하려면 enter.");
+                        Console.ReadLine();
                         break;
                 }
             }
             else
             {
-                Console.WriteLine("잘못된 입력입니다");
+                Console.WriteLine("잘못된 입력입니다.계속하려면 enter.");
+                Console.ReadLine();
             }
 
         }

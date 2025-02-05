@@ -54,13 +54,15 @@ namespace SpartaDungeon.Scenes
                         Rest();
                         break;
                     default:
-                        Console.WriteLine("잘못된 입력입니다.");
+                        Console.WriteLine("잘못된 입력입니다.계속하려면 enter.");
+                        Console.ReadLine();
                         break;
                 }
             }
             else
             {
-                Console.WriteLine("잘못된 입력입니다.");
+                Console.WriteLine("잘못된 입력입니다.계속하려면 enter.");
+                Console.ReadLine();
             }
         }
         public void ShowStatus()
@@ -111,13 +113,15 @@ namespace SpartaDungeon.Scenes
                             isValid = true;
                             break;
                         default:
-                            Console.WriteLine("잘못된 입력입니다");
+                            Console.WriteLine("잘못된 입력입니다.계속하려면 enter.");
+                            Console.ReadLine();
                             break;
                     }
                 }
                 else
                 {
-                    Console.WriteLine("잘못된 입력입니다");
+                    Console.WriteLine("잘못된 입력입니다.계속하려면 enter.");
+                    Console.ReadLine();
                 }
             }
         }
@@ -145,20 +149,23 @@ namespace SpartaDungeon.Scenes
                                 Console.WriteLine("500 G 를 지불했습니다");
                                 DataManager.Instance.player.playerData.hp =
                                     Math.Min(DataManager.Instance.player.playerData.hp + 100, DataManager.Instance.player.playerData.maxHp);
-                                Console.WriteLine("체력 100이 회복되었습니다");
+                                Console.WriteLine("체력 100이 회복되었습니다. 계속 하려면 Enter.");
+                                Console.ReadLine();
                             }
                             break;
                         case 0:
                             isValid = true;
                             break;
                         default:
-                            Console.WriteLine("잘못된 입력입니다");
+                            Console.WriteLine("잘못된 입력입니다.계속하려면 enter.");
+                            Console.ReadLine();
                             break;
                     }
                 }
                 else
                 {
-                    Console.WriteLine("잘못된 입력입니다");
+                    Console.WriteLine("잘못된 입력입니다.계속하려면 enter.");
+                    Console.ReadLine();
                 }
             }
         }

@@ -250,12 +250,14 @@ namespace SpartaDungeon.Managers
                     }
                     else
                     {
-                        Console.WriteLine("잘못된 입력입니다.");
+                        Console.WriteLine("잘못된 입력입니다.계속하려면 enter.");
+                        Console.ReadLine();
                     }
                 }
                 else
                 {
-                    Console.WriteLine("잘못된 입력입니다.");
+                    Console.WriteLine("잘못된 입력입니다.계속하려면 enter.");
+                    Console.ReadLine();
                 }
             }
         }
@@ -349,12 +351,14 @@ namespace SpartaDungeon.Managers
                     }
                     else
                     {
-                        Console.WriteLine("잘못된 입력입니다.");
+                        Console.WriteLine("잘못된 입력입니다.계속하려면 enter.");
+                        Console.ReadLine();
                     }
                 }
                 else
                 {
-                    Console.WriteLine("잘못된 입력입니다.");
+                    Console.WriteLine("잘못된 입력입니다.계속하려면 enter.");
+                    Console.ReadLine();
                 }
             }
         }
