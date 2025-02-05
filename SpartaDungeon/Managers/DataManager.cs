@@ -10,13 +10,13 @@ namespace SpartaDungeon.Managers
     // player와 inventory를 하나의 파일로 저장하기 위해 GameData 클래스로 래핑한다
     public class GameData
     {
-        public string name;
+        public int index;
         public Player player;
         public Inventory inventory;
         public GameData() { }
-        public GameData(string n, Player p, Inventory i)
+        public GameData(int idx, Player p, Inventory i)
         {
-            name = n;
+            index = idx;
             player = p;
             inventory = i;
         }
@@ -30,28 +30,30 @@ namespace SpartaDungeon.Managers
         // Newtonsoft.Json을 이용하여 저장한다
 
         // 파일경로
-        public string GetFilePath(string name)
+        public string GetFilePath(int idx)
         {
-            return $"savefile_{name}.json"; // 실행파일이 있는 곳에 해당 이름으로 저장된다
+            return $"savefile_{idx}.json"; // 실행파일이 있는 곳에 해당 이름으로 저장된다
         }
 
-        public bool IsSaveFile(string name)
+        public bool IsSaveFile(int idx)
         {
-            return File.Exists(GetFilePath(name));
+            return File.Exists(GetFilePath(idx));
         }
-        public void SaveData()
+        public void SaveData(int idx)
         {
-            GameData tmpData = new GameData(player.playerData.name, player, inventory);
+            // 인덱스가 넘어온다
+
+            GameData tmpData = new GameData(idx, player, inventory);
             // null이어도 저장이 되어야한다!
 
             string json = JsonConvert.SerializeObject(tmpData);
-            File.WriteAllText(GetFilePath(tmpData.name), json);
+            File.WriteAllText(GetFilePath(tmpData.index), json);
         }
-        public bool LoadData(string name)
+        public bool LoadData(int idx)
         {
             GameData gameData = new GameData(); // 메모리 할당을 먼저 한다
 
-            string path = GetFilePath(name);
+            string path = GetFilePath(idx);
             if (File.Exists(path))
             {
                 string jsonData = File.ReadAllText(path);
@@ -61,7 +63,7 @@ namespace SpartaDungeon.Managers
                     NullValueHandling = NullValueHandling.Include,
                     MissingMemberHandling = MissingMemberHandling.Ignore    // JSON 데이터에 C# 객체에 정의되지 않은 속성이 있을 때, 이를 무시하고 계속 진행할 수 있습니다 
                 };
-                gameData = JsonConvert.DeserializeObject<GameData>(jsonData, settings);
+                gameData = JsonConvert.DeserializeObject<GameData>(jsonData, settings); 
                 // 플레이어
                 player.playerData.name = gameData.player.playerData.name;
                 player.playerData.level = gameData.player.playerData.level;
