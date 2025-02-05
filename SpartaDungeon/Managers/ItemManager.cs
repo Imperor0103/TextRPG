@@ -21,7 +21,7 @@ namespace SpartaDungeon.Managers
             CreateItem("무쇠갑옷", eItemType.ARMOR, eClassType.ALL, 0f, 9f, 0f, "무쇠로 만들어져 튼튼한 갑옷입니다.", 1500);
             CreateItem("스파르타의 갑옷", eItemType.ARMOR, eClassType.WARRIOR, 0f, 15f, 0f, "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.", 3500);
             CreateItem("황혼의 도포", eItemType.ARMOR, eClassType.MAGE, 0f, 15f, 0f, "바람이 많이 부는 나라에서 가져온 마법사 전용 전설의 갑옷입니다.", 3500);
-            CreateItem("인내", eItemType.ARMOR, eClassType.WARRIOR, 0f, 15f, 0f, "아마존에서 가져온 궁수 전용 전설의 갑옷입니다.", 3500);
+            CreateItem("인내", eItemType.ARMOR, eClassType.ARCHER, 0f, 15f, 0f, "아마존에서 가져온 궁수 전용 전설의 갑옷입니다.", 3500);
 
 
             CreateItem("낡은 검", eItemType.WEAPON, eClassType.ALL, 2f, 0f, 0f, "쉽게 볼 수 있는 낡은 검 입니다.", 600);
