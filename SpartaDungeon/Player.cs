@@ -67,13 +67,27 @@ namespace SpartaDungeon
             playerData.gold = gold;
         }
         // 공격, 방어시에는 아이템 능력치까지 합산한다
-        public float Attack()
+        public float PlayerAttack()
         {
-            return playerData.attack + DataManager.Instance.inventory.Weapon.itemData.attack;
+            if (DataManager.Instance.inventory.Weapon != null)
+            {
+                return playerData.attack + DataManager.Instance.inventory.Weapon.itemData.attack;
+            }
+            else
+            {
+                return playerData.attack;
+            }
         }
-        public float Defence()
+        public float PlayerDefence()
         {
-            return playerData.defence + DataManager.Instance.inventory.Weapon.itemData.defence;
+            if (DataManager.Instance.inventory.Armor != null)
+            {
+                return playerData.defence + DataManager.Instance.inventory.Armor.itemData.defence;
+            }
+            else
+            {
+                return playerData.defence;
+            }
         }
     }
 }
