@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SpartaDungeon.Scenes
 {
@@ -81,14 +82,14 @@ namespace SpartaDungeon.Scenes
             Console.WriteLine("1~5 중에서 슬롯을 선택하여 저장, 불러오기, 삭제 가능\n0.이전화면으로 돌아가기\n"); // \n4.게임 저장\n5.게임 불러오기\n6.종료
             Console.Write("원하시는 행동을 입력해주세요.\n>> ");
             // 슬롯 체크한다
-            int num;
+            int fileNum;    /// num은 파일의 인덱스로 배열의인덱스 + 1 이다
             string input = Console.ReadLine();
-            if (int.TryParse(input, out num))
+            if (int.TryParse(input, out fileNum))
             {
-                if (num >= 1 && num <= dataSlots.Length)
+                if (fileNum >= 1 && fileNum <= dataSlots.Length)
                 {
                     // 슬롯이 비어있었던 경우
-                    if (dataSlots[num - 1] == null)
+                    if (dataSlots[fileNum - 1] == null)
                     {
                         /// 이전 씬의 데이터를 가져와서 저장한다
                         BaseScene prevScene = SceneManager.Instance.GetPrevScene(); // 사실 없어도 된다. DataManager가 씬과 상관없이 존재하기 때문이다
@@ -97,15 +98,15 @@ namespace SpartaDungeon.Scenes
                             /// 여기가 문제다
                             /// GameData를 멤버로 가진 클래스가 없다. 심지어 DataManager도 GameData를 멤버로 가지고 있지 않다
                             /// 그래서 new로 생성한다.
-                            GameData data = new GameData(num - 1, DataManager.Instance.player, DataManager.Instance.inventory); // 실제 배열의 인덱스는 num-1이다
+                            GameData data = new GameData(fileNum - 1, DataManager.Instance.player, DataManager.Instance.inventory); // 실제 배열의 인덱스는 num-1이다
                             /// 하지만 플레이어, 인벤토리가 없는데도 data가 null이 되지 않아서 조건을 바꿨다
                             //if (data != null)
                             if (data.player != null || data.inventory != null)
                             {
                                 // 저장
-                                dataSlots[num - 1] = data;
-                                DataManager.Instance.SaveData(num); /// 파일의 인덱스는 1부터
-                                Console.WriteLine($"슬롯 {num}번에 데이터를 저장했습니다.계속하려면 enter.");
+                                dataSlots[fileNum - 1] = data;
+                                DataManager.Instance.SaveData(fileNum); /// 파일의 인덱스는 1부터
+                                Console.WriteLine($"슬롯 {fileNum}번에 데이터를 저장했습니다.계속하려면 enter.");
                                 Console.ReadLine();
                             }
                             else
@@ -122,11 +123,11 @@ namespace SpartaDungeon.Scenes
                     }
                     else
                     {
-                        Console.WriteLine($"슬롯{num}에는 이미 저장된 데이터가 존재합니다.");
-                        ModifySlot(dataSlots[num - 1]);
+                        Console.WriteLine($"슬롯{fileNum}에는 이미 저장된 데이터가 존재합니다.");
+                        ModifySlot(dataSlots[fileNum - 1]); /// dataSlots[0]번은 파일의 1번째이므로, 매개변수로 전달하는 data의 멤버인 fileIndex는 1이 넘어가야한다
                     }
                 }
-                else if (num == 0)
+                else if (fileNum == 0)
                 {
                     // TownScene에서 왔으면 TownScene으로, GameProcess에서 왔으면 GameProcess로 돌아가야하므로 이전 씬의 이름을 가져온다
                     SceneManager.Instance.SetCurrentScene(SceneManager.Instance.GetPrevScene().GetName());
@@ -182,6 +183,7 @@ namespace SpartaDungeon.Scenes
         public void ModifySlot(GameData data)
         {
             // 매개변수로 들어오는 data는 이미 슬롯에 있던 기존의 데이터
+            /// dataSlots[0]번은 파일의 1번째이므로, 매개변수로 전달받 data의 멤버인 fileIndex는 1이 되어야 한다. 그런데 0이 넘어왔네?
             bool isValid = false;
             int num;
             while (!isValid)
@@ -224,8 +226,8 @@ namespace SpartaDungeon.Scenes
                     }
                 }
                 Console.WriteLine();
-                Console.Write("1.불러오기\n2.저장 데이터 덮어쓰기\n3.저장 데이터 삭제\n0.이전화면으로 돌아가기\n"); // \n4.게임 저장\n5.게임 불러오기\n6.종료
-                Console.Write("원하시는 행동을 입력해주세요.\n>> ");
+                Console.WriteLine("1.불러오기\n2.저장 데이터 덮어쓰기\n3.저장 데이터 삭제\n0.이전화면으로 돌아가기\n"); // \n4.게임 저장\n5.게임 불러오기\n6.종료
+                Console.WriteLine("원하시는 행동을 입력해주세요.\n>> ");
                 string input = Console.ReadLine();
                 if (int.TryParse(input, out num))
                 {
@@ -233,6 +235,8 @@ namespace SpartaDungeon.Scenes
                     {
                         case 1:
                             // 불러오기
+                            LoadData(data);     // 기존의 데이터 전달
+                            isValid = true;
                             break;
                         case 2:
                             OverwriteData(data);    // 기존의 데이터 전달
@@ -240,7 +244,7 @@ namespace SpartaDungeon.Scenes
                             break;
                         case 3:
                             DeleteData(data);   // 삭제할 데이터 전달
-                            //isValid = true;
+                            isValid = true;
                             break;
                         case 0:
                             /// TownScene에서 왔으면 TownScene으로, GameProcess에서 왔으면 GameProcess로 돌아가야하므로 이전 씬의 이름을 가져온다
@@ -260,22 +264,40 @@ namespace SpartaDungeon.Scenes
                 }
             }
         }
+        // 불러오기
+        public void LoadData(GameData data)
+        {
+            // 매개변수로 전달된 data는 null이 아니다
+            /// 주의: 전달된 data의 인덱스는 파일의 인덱스이므로 1을 더하지 않고 바로 사용한다
+            bool isLoaded = DataManager.Instance.LoadData(data.fileIndex);
+            if (isLoaded)
+            {
+                Console.WriteLine($"슬롯 {data.fileIndex}번의 데이터를 불러왔습니다. 계속하려면 Enter를 누르세요.");
+                Console.ReadLine();
+                // 마을씬으로 바꾼다
+                SceneManager.Instance.SetCurrentScene("town"); // 
+            }
+            else
+            {
+                Console.WriteLine($"저장된 데이터를 불러오는 데 실패했습니다. 계속하려면 Enter를 누르세요.");
+                Console.ReadLine();
+            }
+        }
+
         // 덮어쓰기
         public void OverwriteData(GameData data)
         {
             // 새 데이터를 생성 (슬롯 번호는 data.index가 0-based로 저장되어 있으므로, 파일 저장 시에는 +1 해줌)
-            GameData newData = new GameData(data.index, DataManager.Instance.player, DataManager.Instance.inventory);
+            GameData newData = new GameData(data.fileIndex, DataManager.Instance.player, DataManager.Instance.inventory);
             // 파일 저장 : DataManager의 SaveData 메서드는 파일 번호(1-based)를 받으므로 data.index + 1을 전달
             /// 하지만 플레이어, 인벤토리가 없는데도 data가 null이 되지 않아서 조건을 바꿨다
             if (newData.player != null || newData.inventory != null)
             {
-                DataManager.Instance.SaveData(data.index + 1);
-                // 슬롯 배열 업데이트
-                // (예: dataSlots[data.index] = newData;)
+                DataManager.Instance.SaveData(data.fileIndex);
+                // 슬롯 배열 업데이트 (예: dataSlots[data.index] = newData;)
                 // 여기서는 ModifySlot의 매개변수 data를 갱신해도 되고, dataSlots 배열의 해당 인덱스를 직접 갱신해도 됨
-                // 만약 dataSlots 배열이 현재 클래스의 멤버라면 아래처럼 작성
-                dataSlots[data.index] = newData;
-                Console.WriteLine($"슬롯 {data.index + 1}번에 새로운 데이터를 저장했습니다. 계속하려면 Enter를 누르세요.");
+                dataSlots[data.fileIndex - 1] = newData;    /// fileIndex에서 1을 빼야 배열의 인덱스이다
+                Console.WriteLine($"슬롯 {data.fileIndex}번에 새로운 데이터를 저장했습니다. 계속하려면 Enter를 누르세요.");
                 Console.ReadLine();
             }
             else
@@ -283,21 +305,21 @@ namespace SpartaDungeon.Scenes
                 Console.WriteLine("저장할 데이터가 없습니다.계속하려면 enter.");
                 Console.ReadLine();
             }
-
         }
         // 삭제
         public void DeleteData(GameData data)
         {
             // 매개변수로 들어가는 데이터는 삭제할 데이터
             // 저장된 파일(삭제할 데이터)의 경로를 구함 (data.index가 0부터 시작하므로 파일 번호는 data.index + 1)
-            string filePath = DataManager.Instance.GetFilePath(data.index + 1);
+            // 1을 눌렀는데 2번이 삭제된다? 1을 더하지 않았는데도
+            string filePath = DataManager.Instance.GetFilePath(data.fileIndex);
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);
             }
             // 슬롯 배열에서도 데이터를 제거
-            dataSlots[data.index] = null;
-            Console.WriteLine($"슬롯 {data.index + 1}번의 데이터가 삭제되었습니다. 계속하려면 Enter를 누르세요.");
+            dataSlots[data.fileIndex-1] = null;
+            Console.WriteLine($"슬롯 {data.fileIndex}번의 데이터가 삭제되었습니다. 계속하려면 Enter를 누르세요.");
             Console.ReadLine();
         }
     }
