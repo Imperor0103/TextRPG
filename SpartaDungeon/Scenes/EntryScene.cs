@@ -21,9 +21,13 @@ namespace SpartaDungeon.Scenes
         }
         public override void Start()
         {
-            StartGame();
         }
-        public void StartGame()
+        public override void Update()
+        {
+            PlayGame();
+        }
+
+        public override void PlayGame()
         {
             Console.Clear();
             Console.WriteLine("Text RPG \"스파르타 던전\"에 오신 여러분 환영합니다.\n");
@@ -127,18 +131,7 @@ namespace SpartaDungeon.Scenes
                     Console.ReadLine();
                 }
             }
-        }
-
-
-
-
-        public override void Update()
-        {
-            PlayGame();
-        }
-        public override void PlayGame()
-        {
-
+            SceneManager.Instance.SetCurrentScene("town");
         }
     }
 }
