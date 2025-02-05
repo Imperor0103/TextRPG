@@ -1,4 +1,5 @@
-﻿using SpartaDungeon.Managers;
+﻿using Newtonsoft.Json;
+using SpartaDungeon.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,12 @@ namespace SpartaDungeon
     {
         public HashSet<Item> ownedItemSet;  // 플레이어 소유 아이템
         public List<Item> armedItemList;    // 장착한 아이템
+
+
         // 아이템 장착 관련
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]   /// null이어도 저장할 때 제거되지 않음
         public Item? weapon;
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         public Item? armor;
 
         public Item Weapon
