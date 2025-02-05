@@ -34,7 +34,7 @@ namespace SpartaDungeon
             if (sceneManager == null)
             {
                 sceneManager = SceneManager.Instance;
-                // 씬을 준비한다(초기 currentScene은 마을)
+                // 씬을 준비한다(초기 currentScene은 시작화면)
                 sceneManager.PrepareScene();
             }
             isPlaying = true;   // 값을 바꾸지만 않는다면, 무한루프 돈다
