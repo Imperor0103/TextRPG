@@ -13,14 +13,15 @@ namespace SpartaDungeon.Scenes
         public StoreScene(string name) : base(name)
         {
         }
-        public override void Start()
-        {
-        }
 
         public override void LoadScene()
         {
+            // 생성자를 안썼다면, 여기에서 Awake를 호출하여 초기화를 했을 것임
         }
         public override void UnloadScene()
+        {
+        }
+        public override void Start()
         {
         }
 

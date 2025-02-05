@@ -49,14 +49,14 @@ namespace SpartaDungeon.Scenes
             dungeonList.Add(new DungeonInfo("normal", eDifficulty.NORMAL, 11.0f, 1700, 17));
             dungeonList.Add(new DungeonInfo("hard", eDifficulty.HARD, 17.0f, 2500, 25));
         }
-        public override void Start()
-        {
-
-        }
         public override void LoadScene()
         {
+            // 생성자를 안썼다면, 여기에서 Awake를 호출하여 초기화를 했을 것임
         }
         public override void UnloadScene()
+        {
+        }
+        public override void Start()
         {
         }
 

@@ -8,14 +8,13 @@ using System.Threading.Tasks;
 namespace SpartaDungeon.Managers
 {
     public class SceneManager : Singleton<SceneManager>
-    {
+    {        
         // 모든 씬을 관리한다
         // 마을, 던전, 상점
         BaseScene prevScene;
         BaseScene currentScene;
         //List<BaseScene> sceneList;
         public Dictionary<string, BaseScene> sceneDictionary;
-
         public void PrepareScene()
         {
             if (sceneDictionary == null)
@@ -33,7 +32,7 @@ namespace SpartaDungeon.Managers
             sceneDictionary.Add("store",storeScene);
             sceneDictionary.Add("dungeon",dungeonScene);
             sceneDictionary.Add("saveLoad", saveLoadScene);
-
+            
             //sceneList.Add(townScene);
             //sceneList.Add(storeScene);
             //sceneList.Add(dungeonScene);
@@ -57,6 +56,8 @@ namespace SpartaDungeon.Managers
             currentScene.UnloadScene(); // 현재 씬을 언로드(하는 척만 한다)
             currentScene = sceneDictionary[key];    // 현재씬을 교체후
             currentScene.LoadScene();       // 새로운 씬을 로드(하는 척만 한다)
+            // 로드한 다음에는 해당 씬을 Start해야한다
+            Start();    // Start에서 알아서 currentScene의 Start를 호출
         }
         public BaseScene GetCurrentScene()
         {
