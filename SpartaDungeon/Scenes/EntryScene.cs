@@ -14,6 +14,7 @@ namespace SpartaDungeon.Scenes
         }
         public override void LoadScene()
         {
+            // 생성자를 안썼다면, 여기에서 Awake를 호출하여 초기화를 했을 것임
         }
         public override void UnloadScene()
         {
@@ -47,6 +48,7 @@ namespace SpartaDungeon.Scenes
                             break;
                         case 9:
                             isValid = true;
+                            GameProcess.isPlaying = false;
                             //Console.WriteLine("게임을 종료합니다");
                             break;
                         default:

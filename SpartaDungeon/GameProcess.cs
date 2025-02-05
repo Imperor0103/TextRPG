@@ -13,7 +13,7 @@ namespace SpartaDungeon
         DataManager dataManager;
         SceneManager sceneManager;
 
-        public bool isPlaying;
+        static public bool isPlaying;
 
         // 유니티의 Awake 같은 기능
         public GameProcess()
@@ -37,6 +37,7 @@ namespace SpartaDungeon
                 // 씬을 준비한다(초기 currentScene은 마을)
                 sceneManager.PrepareScene();
             }
+            isPlaying = true;   // 값을 바꾸지만 않는다면, 무한루프 돈다
         }
         public void Start()
         {
@@ -45,7 +46,6 @@ namespace SpartaDungeon
  
         public void Loop()
         {
-            isPlaying = true;
             while (isPlaying)
             {
                 Update();
