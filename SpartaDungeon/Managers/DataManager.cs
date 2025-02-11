@@ -85,7 +85,7 @@ namespace SpartaDungeon.Managers
 
                 var settings = new JsonSerializerSettings
                 {
-                    NullValueHandling = NullValueHandling.Include,
+                    NullValueHandling = NullValueHandling.Include,      // null값도 json에 저장
                     MissingMemberHandling = MissingMemberHandling.Ignore    // JSON 데이터에 C# 객체에 정의되지 않은 속성이 있을 때, 이를 무시하고 계속 진행할 수 있습니다 
                 };
                 gameData = JsonConvert.DeserializeObject<GameData>(jsonData, settings);
