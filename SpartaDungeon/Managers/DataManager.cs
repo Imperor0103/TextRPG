@@ -13,11 +13,11 @@ namespace SpartaDungeon.Managers
         public int fileIndex;   /// 저장시점에 저장슬롯의 인덱스(배열의 인덱스 + 1)를 대입한다 
         public Player player;   // 참조 타입의 멤버 변수
         public Inventory inventory; // 참조 타입의 멤버 변수
-        public GameData() 
+        public GameData()
         {
             int index = 0;
             /// player, inventory를 생성하지 않으면 둘 다 null이 되어 LoadData 메서드에서 대입을 못한다
-            player = new Player();  
+            player = new Player();
             inventory = new Inventory();
         }
         public GameData(int idx, Player p, Inventory i)
@@ -43,7 +43,12 @@ namespace SpartaDungeon.Managers
         /// <returns></returns>
         public string GetFilePath(int fileIdx)
         {
-            return $"savefile_{fileIdx}.json"; // 실행파일이 있는 곳에 해당 이름으로 저장된다
+            // 세이브파일 생성위치 수정
+            string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string parentDirectory = Directory.GetParent(exeDirectory).Parent.Parent.Parent.FullName;   // 3단계 상위 폴더(프로젝트폴더)로 이동
+            string saveDirectory = Path.Combine(parentDirectory, "SaveFiles");
+            Directory.CreateDirectory(saveDirectory);
+            return Path.Combine(saveDirectory,$"savefile_{fileIdx}.json"); // 실행파일이 있는 곳에 해당 이름으로 저장된다
         }
 
         public bool IsSaveFile(int fileIdx)
@@ -83,7 +88,7 @@ namespace SpartaDungeon.Managers
                     NullValueHandling = NullValueHandling.Include,
                     MissingMemberHandling = MissingMemberHandling.Ignore    // JSON 데이터에 C# 객체에 정의되지 않은 속성이 있을 때, 이를 무시하고 계속 진행할 수 있습니다 
                 };
-                gameData = JsonConvert.DeserializeObject<GameData>(jsonData, settings); 
+                gameData = JsonConvert.DeserializeObject<GameData>(jsonData, settings);
                 // 플레이어
                 player.playerData.name = gameData.player.playerData.name;
                 player.playerData.level = gameData.player.playerData.level;
